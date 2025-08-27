@@ -1,0 +1,3 @@
+In order to use npm in our powershell we have to run each time
+
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
