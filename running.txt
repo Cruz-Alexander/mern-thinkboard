@@ -1,3 +1,6 @@
 In order to use npm in our powershell we have to run each time
 
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+// What is an Endpoint?
+// An endpoint is a combination of a URL + HTTP method that lets the client interact with a specific resource.

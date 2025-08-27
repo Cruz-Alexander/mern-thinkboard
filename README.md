@@ -8,3 +8,6 @@ it back to you. It isn't always safe for the client or customer to directly spea
 Next commit we have added installed nodemon using npm. This allows us to update the code in our development mode and save it so that we don't have to restart the server every single time to see the changes.
 We have also added a 'npm run start' script which will be used instead of 'npm run dev' when we deploy our app. Main difference is that start uses node and dev uses nodemon. Last but not least we created some more routes that go along with
 the first route we originally added (also known as our api). These routes now include, get, put, post, and delete.
+
+Next commit we have added a bunch of routing and controllers to keep our code clean and minimal. If we piled everything up within our server.js file it would end up taking lots of lines of code. Doing this the way we did,
+we also allowed for future pages to be added in a much more robust/compact way, where we just add another line of code to our server.js (like this one 'app.use("/api/notes", notesRoutes);') and then we can create a new routing file and controller file for our http request and responses. Last but not least we also threw everything in our src folder for common practice.
