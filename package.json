@@ -1,0 +1,21 @@
+{
+  "name": "mern-thinkboard",
+  "version": "1.0.0",
+  "description": "First commit we have created the backend/frontend folders and installed all of the necessary dependencies. We worked on getting node installed so that we could use npm to install express.\r Express.js (often shortened to Express) is a popular, minimalistic web framework for Node.js that simplifies the creation of fast, scalable, and flexible web applications and APIs.",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
+    "start": "npm run start --prefix backend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cruz-Alexander/mern-thinkboard.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Cruz-Alexander/mern-thinkboard/issues"
+  },
+  "homepage": "https://github.com/Cruz-Alexander/mern-thinkboard#readme"
+}
