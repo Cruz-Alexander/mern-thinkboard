@@ -12,11 +12,16 @@ const noteSchema = new mongoose.Schema({
             type:String,
             required: true
         },
+        user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",  // references the User model
+        required: true
+    }
     },
     { timestamps: true } // createdAt, updatedAt
 );
 
 
-const Note = mongoose.model("Note", noteSchema)
+const Note = mongoose.model("Note", noteSchema);
 
 export default Note
