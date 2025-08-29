@@ -31,3 +31,58 @@ In this commit we have finished our CreatePage. This includes a place where we c
 In this commit we have added the delete functionality within the NoteCard.jsx file. This ensures that the notes are deleted with a confirmation screen off of the homescreen. We have also added a line of code that makes is so that when we delete a note, our page is automatically updated rather than having to refresh every single time (setNotes((prev) => prev.filter(note => note._id !== id))). We also created a NotesNotFound component, where if we have not created any notes yet or have deleted them all, then we have a prompt on the screen that tells us there's no notes yet, lets create a note.
 
 In this commit we have finished the NoteDetailPage where we will edit each note individually. We also have the ability to delete the notes from this page. We use the 'const { id } = useParams();' to find which post we want to modify. Once we are doing editing or deleting a post we also use the 'const navigate = useNavigate();' to go back to the home page. This page has a title field, content field, and save changes button. If the databse may be taking a while to fetch a note, we also have added a loading icon.
+
+# Adding User Authentication
+## Backend Setup
+
+We began by extending the backend with a User model in MongoDB. This schema included a username, email, and password. We added a pre("save") hook so that passwords would be securely hashed with bcrypt before being stored. This ensures no plain-text passwords are ever written to the database.
+
+Next, we created auth routes (/api/auth/register and /api/auth/login). On registration, the backend checks for duplicates, saves the new user, and generates a JWT token signed with a secret (JWT_SECRET) from your .env file. On login, it verifies the user’s email and password, and if valid, returns that same kind of token.
+
+We then wrote an auth middleware that checks for the presence of a token in the Authorization header (Bearer <token>), verifies it, and attaches the decoded user.id to the req object. This middleware was added to all notes routes, ensuring that only authenticated requests can access or manipulate notes. The Note schema was updated to include a user field so each note belongs to the user who created it. Controllers were then modified to filter queries by req.user.id, so users can only see or edit their own notes.
+
+## Frontend Integration
+
+On the React side, we built an AuthContext to manage authentication state across the app. It stores both user and token in state, persists them in localStorage, and exposes login() and logout() methods. A ready flag was added to prevent premature redirects before the app finishes loading stored credentials.
+
+We then created Login and Register pages. These pages render forms that send requests to /auth/login and /auth/register. On success, they call login(user, token) from AuthContext, which updates state and storage.
+
+To protect frontend routes, we added a PrivateRoute component. It checks whether a valid token exists in context or localStorage. If the user is authenticated, the child component is rendered; otherwise, they’re redirected to /login. This was applied to /create and /note/:id. The HomePage remained public, but its data-fetching still relies on the token-aware axios instance.
+
+## Axios Interceptors
+
+We updated your shared axios.js instance so that it automatically attaches the JWT token to every request via the Authorization header. A response interceptor was also added so that if the backend responds with a 401 Unauthorized, the client clears the token and redirects back to /login. This ensures consistent token management without needing to repeat headers everywhere in your code.
+
+## UI Updates
+
+We modified the Navbar to be authentication-aware. When logged out, it shows Login and Register links. When logged in, it shows a New Note button, a greeting, and a Logout button. The logout function clears the token and user data from both state and storage, then navigates to /login.
+
+We also added convenience links between Login and Register pages (e.g., “Don’t have an account? Create one” and “Already have an account? Log in”).
+
+## Bug Fixes Along the Way
+
+Fixed a mismatch where the frontend was sending name while the backend expected username.
+
+Solved the error "secretOrPrivateKey must have a value" by setting JWT_SECRET in your .env.
+
+Fixed "undefined is not valid JSON" by hardening AuthContext to safely parse localStorage.
+
+Solved the redirect issue on /create by ensuring the app used the proper imported PrivateRoute that checks tokens, not the outdated inline version in App.jsx.
+
+## Final Result
+
+We now have a full authentication system.
+
+Users can register and log in securely.
+
+JWTs are stored and attached to every request.
+
+Notes are scoped per user on the backend.
+
+React routes are protected on the frontend.
+
+Navbar and UI respond to auth state.
+
+Logout works cleanly.
+
+This brings ThinkBoard from a simple notes app to a production-ready multi-user platform with secure authentication and session handling.
